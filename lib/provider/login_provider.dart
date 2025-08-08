@@ -45,6 +45,8 @@ class LoginProvider extends ChangeNotifier {
         await prefs.setString('token', _user!.token); // Save token
         await prefs.setString('FirstName', _user!.fname); // Save token
         await prefs.setString('LastName', _user!.lname); // Save token
+        await prefs.setString('id', _user!.id.toString());
+        await prefs.setString('name', _user!.username);
 
         _isLoading = false;
         notifyListeners();

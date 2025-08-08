@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 final consultantPhone = record.consultantPhone;
                 final status = record.callStatus;
                 final duration = record.callDuration;
-                final callDate = tab == 'Verification' ?DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.createdDate)):DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.callDate));
+                final callDate = tab == 'Verification' ? DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.createdDate)):DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.callDate));
                 final id = record.id;
                 return Card(
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
