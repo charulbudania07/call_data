@@ -278,7 +278,7 @@ class _NotConnectedScreenState extends State<NotConnectedScreen> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.call, color: Colors.green),
-                                      onPressed: () => _callNow(call.userPhone),
+                                      onPressed: () => _callNow("+${call.userPhone}"),
                                       iconSize: 20,
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),

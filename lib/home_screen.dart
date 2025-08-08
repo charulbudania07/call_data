@@ -303,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.call, color: Colors.green),
-                                      onPressed: () => _callNow(userPhone),
+                                      onPressed: () => _callNow("+$userPhone"),
                                       iconSize: 20,
                                       padding: EdgeInsets.zero,
                                       constraints: BoxConstraints(),
