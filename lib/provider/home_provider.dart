@@ -14,9 +14,9 @@ class HomeProvider with ChangeNotifier {
   final Map<String, DateTime?> _toDates = {};
 
   final Map<String, int> _offsets = {
-    'Cancelled': 1,
-    'Answered': 1,
-    'Verification': 1,
+    'Cancelled': 0,
+    'Answered': 0,
+    'Verification': 0,
   };
 
   final Map<String, bool> _hasMoreData = {
@@ -44,7 +44,7 @@ class HomeProvider with ChangeNotifier {
         DateTime? from,
         DateTime? to,
         bool applyFilter = false,
-        int offset = 1,
+        int offset = 0,
         int limit = 15,
       }) async {
     _isLoading = true;
@@ -69,7 +69,7 @@ class HomeProvider with ChangeNotifier {
         final List<dynamic> data = response.data['data'] ?? [];
         final List<CallRecord> records = data.map((e) => CallRecord.fromJson(e)).toList();
 
-        if (offset == 1) {
+        if (offset == 0) {
           _recordsByTab[tab] = records;
         } else {
           _recordsByTab[tab]!.addAll(records);
@@ -81,11 +81,11 @@ class HomeProvider with ChangeNotifier {
           _offsets[tab] = offset + limit;
         }
       }else {
-        if (offset == 1) _recordsByTab[tab] = [];
+        if (offset == 0) _recordsByTab[tab] = [];
         _hasMoreData[tab] = false; // If failure, no more data
       }
     } catch (e) {
-      if (offset == 1) _recordsByTab[tab] = [];
+      if (offset == 0) _recordsByTab[tab] = [];
       debugPrint('Error fetching $tab: $e');
     }
 
@@ -96,9 +96,9 @@ class HomeProvider with ChangeNotifier {
   /// Helper to map tab to API
   String _getApiForTab(String tab) {
     switch (tab) {
-      case 'Answered':
+      case 'Answer':
         return 'getAnswerCalls';
-      case 'Cancelled':
+      case 'Cancel':
         return 'getCancelCalls';
       case 'Verification':
         return 'getVerifications';

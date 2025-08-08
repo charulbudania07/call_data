@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       final provider = Provider.of<HomeProvider>(context, listen: false);
       provider.fetchDataForTab(
         tabs[0],
-        offset: 1,
+        offset: 0,
         limit: 15,
         applyFilter: false, // 🚫 Not saving as filter
       );
