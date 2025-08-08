@@ -3,6 +3,7 @@ import 'package:call_management/custom_drawer.dart';
 import 'package:call_management/model/call_Record.dart';
 import 'package:call_management/provider/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<String> tabs = ['Cancelled', 'Answered', 'Verification'];
+  final List<String> tabs = ['Cancel', 'Answer', 'Verification'];
 
   @override
   void initState() {
@@ -25,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _tabController.addListener(_handleTabChange);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final now = DateTime.now();
       final provider = Provider.of<HomeProvider>(context, listen: false);
       provider.fetchDataForTab(
         tabs[0],
@@ -256,12 +256,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             itemCount: records.length,
                             itemBuilder: (_, index) {
                 CallRecord record = records[index];
-                final userName = record.userName;
-                final userPhone = record.userPhone;
+                final userName =  tab == 'Verification' ?record.fullName:record.userName;
+                final userPhone =  tab == 'Verification' ?record.phoneNumber:record.userPhone;
                 final consultantName = record.consultantName;
                 final consultantPhone = record.consultantPhone;
                 final status = record.callStatus;
                 final duration = record.callDuration;
+                final callDate = tab == 'Verification' ?DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.createdDate)):DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.callDate));
                 final id = record.id;
                 return Card(
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -336,6 +337,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                           ],
                         ),
+
+                        Text(callDate)
                       ],
                     ),
                   ),

@@ -6,6 +6,10 @@ class CallRecord {
   final String consultantPhone;
   final int callDuration;
   final String callStatus;
+  final String callDate;
+  final String createdDate;
+  final String fullName;
+  final String phoneNumber;
 
   CallRecord({
     required this.id,
@@ -15,6 +19,10 @@ class CallRecord {
     required this.consultantPhone,
     required this.callDuration,
     required this.callStatus,
+    required this.callDate,
+    required this.createdDate,
+    required this.fullName,
+    required this.phoneNumber,
   });
 
   factory CallRecord.fromJson(Map<String, dynamic> json) {
@@ -26,6 +34,10 @@ class CallRecord {
       consultantPhone: json['consultant_phone'] ?? '',
       callDuration: json['call_duration'] ?? 0,
       callStatus: json['call_status'] ?? '',
+      callDate: json['call_date'] ?? '',
+      createdDate: json['created_at'] ?? '',
+      fullName: json['full_name'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
     );
   }
 
@@ -38,6 +50,10 @@ class CallRecord {
       'consultant_phone': consultantPhone,
       'call_duration': callDuration,
       'call_status': callStatus,
+      'call_date': callDate,
+      'created_at': createdDate,
+      'full_name': fullName,
+      'phone_number': phoneNumber,
     };
   }
 }

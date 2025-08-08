@@ -2,8 +2,10 @@ import 'package:call_management/home_screen.dart';
 import 'package:call_management/login_screen.dart';
 import 'package:call_management/provider/comment_provider.dart';
 import 'package:call_management/provider/connected_call_provider.dart';
+import 'package:call_management/provider/follow_up_provider.dart';
 import 'package:call_management/provider/home_provider.dart';
 import 'package:call_management/provider/login_provider.dart';
+import 'package:call_management/provider/not_connected_call_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +18,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => CommentProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => ConnectedCallProvider()),
+        ChangeNotifierProvider(create: (_) => NotConnectedCallProvider()),
+        ChangeNotifierProvider(create: (_) => FollowUpProvider()),
       ],
       child: MyApp(),
     ),

@@ -3,7 +3,7 @@ import 'package:call_management/model/call_data_response.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ConnectedCallProvider with ChangeNotifier {
+class NotConnectedCallProvider with ChangeNotifier {
   final List<ConnectedCall> _calls = [];
   bool _isLoading = false;
   bool _hasMore = true;
@@ -52,7 +52,7 @@ class ConnectedCallProvider with ChangeNotifier {
         : '';
 
     final String endpoint =
-        "getConnectedCalls?startTime=$start&endTime=$end&offset=$_offset&limit=$_limit$statusParam";
+        "getNotConnectedCalls?startTime=$start&endTime=$end&offset=$_offset&limit=$_limit$statusParam";
 
     try {
       final response = await Api().post(endpoint, {});
@@ -123,5 +123,10 @@ class ConnectedCallProvider with ChangeNotifier {
     _calls.clear();
     _offset = 0;
     _hasMore = true;
+  }
+
+  void removeRecordById(int id) {
+    _calls.removeWhere((record) => record.id == id);
+    notifyListeners();
   }
 }

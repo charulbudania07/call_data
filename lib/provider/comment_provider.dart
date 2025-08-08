@@ -27,18 +27,10 @@ class CommentProvider with ChangeNotifier {
     required bool isFollowUp,
     String? recordingPath,
   }) async {
-    final Map<String, dynamic> params = {
-      "id": id,
-      "actionType": actionType,
-      "callStatus": callStatus.toLowerCase(),
-      "profileType": profileType?.toLowerCase() ?? "",
-      "comment": comment,
-      "isFolloUp": isFollowUp,
-    };
 
     try {
 
-      String endpoint = "comment?id=$id&actionType=$actionType&callStatus=${callStatus.toLowerCase()}&profileType=${profileType?.toLowerCase() ??""}&comment=$comment&isFolloUp= $isFollowUp";
+      String endpoint = "comment?id=$id&actionType=$actionType&callStatus=${callStatus}&profileType=${profileType?.toLowerCase() ??""}&comment=$comment&isFolloUp= $isFollowUp";
       final response = await Api().post(endpoint,{});
       if (response.statusCode == 200) {
         print("Comment submitted successfully");
