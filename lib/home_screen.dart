@@ -252,99 +252,102 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   }
                   return true;
                 },
-                child: ListView.builder(
-                            itemCount: records.length,
-                            itemBuilder: (_, index) {
-                CallRecord record = records[index];
-                final userName =  tab == 'Verification' ?record.fullName:record.userName;
-                final userPhone =  tab == 'Verification' ?record.phoneNumber:record.userPhone;
-                final consultantName = record.consultantName;
-                final consultantPhone = record.consultantPhone;
-                final status = record.callStatus;
-                final duration = record.callDuration;
-                final callDate = tab == 'Verification' ? DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.createdDate)):DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.callDate));
-                final id = record.id;
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(userName, style: TextStyle(fontWeight: FontWeight.bold)),
-                            ),
-                            Expanded(
-                              child: Text(consultantName, style: TextStyle(fontWeight: FontWeight.bold)),
-                            ),
-                            Expanded(
-                              child: Text(tab == "Answered" ? "${duration.toString()} min" : status, style: TextStyle(fontSize: 14)),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 2),
-
-                        /// CONTENT ROW
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(userPhone),
-                            ),
-                            Expanded(
-                              child: Text(consultantPhone),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.call, color: Colors.green),
-                                    onPressed: () => _callNow(userPhone),
-                                    iconSize: 20,
-                                    padding: EdgeInsets.zero,
-                                    constraints: BoxConstraints(),
-                                  ),
-                                  SizedBox(width: 8),
-                                  IconButton(
-                                    icon: Icon(Icons.note_add, color: Colors.blue),
-                                    onPressed: () async {
-                                      final result = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => AddCommentScreen(
-                                            id: id,
-                                            actionType: tab,
-                                            name: userName,
-                                            fromVerification: tab == 'Verification',
-                                          ),
-                                        ),
-                                      );
-                                      if (result != null && result is int) {
-                                        provider.removeRecordById(tab, result); // ✅ Call a method to remove the record
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text('Comment added for $userName')),
-                                        );
-                                      }
-                                    },
-                                    iconSize: 20,
-                                    padding: EdgeInsets.zero,
-                                    constraints: BoxConstraints(),
-                                  ),
-                                ],
+                child: RefreshIndicator(
+                  onRefresh: () async => provider.fetchDataForTab(tabs[_tabController.index]),
+                  child: ListView.builder(
+                              itemCount: records.length,
+                              itemBuilder: (_, index) {
+                  CallRecord record = records[index];
+                  final userName =  tab == 'Verification' ?record.fullName:record.userName;
+                  final userPhone =  tab == 'Verification' ?record.phoneNumber:record.userPhone;
+                  final consultantName = record.consultantName;
+                  final consultantPhone = record.consultantPhone;
+                  final status = record.callStatus;
+                  final duration = record.callDuration;
+                  final callDate = tab == 'Verification' ? DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.createdDate)):DateFormat('dd/MM/yyyy hh:mm a').format(DateTime.parse(record.callDate));
+                  final id = record.id;
+                  return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(userName, style: TextStyle(fontWeight: FontWeight.bold)),
                               ),
-                            ),
-                          ],
-                        ),
-
-                        Text(callDate)
-                      ],
-                    ),
-                  ),
-                );
-                            },
+                              Expanded(
+                                child: Text(consultantName, style: TextStyle(fontWeight: FontWeight.bold)),
+                              ),
+                              Expanded(
+                                child: Text(tab == "Answered" ? "${duration.toString()} min" : status, style: TextStyle(fontSize: 14)),
+                              ),
+                            ],
                           ),
+                          SizedBox(height: 2),
+
+                          /// CONTENT ROW
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(userPhone),
+                              ),
+                              Expanded(
+                                child: Text(consultantPhone),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.call, color: Colors.green),
+                                      onPressed: () => _callNow(userPhone),
+                                      iconSize: 20,
+                                      padding: EdgeInsets.zero,
+                                      constraints: BoxConstraints(),
+                                    ),
+                                    SizedBox(width: 8),
+                                    IconButton(
+                                      icon: Icon(Icons.note_add, color: Colors.blue),
+                                      onPressed: () async {
+                                        final result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => AddCommentScreen(
+                                              id: id,
+                                              actionType: tab,
+                                              name: userName,
+                                              fromVerification: tab == 'Verification',
+                                            ),
+                                          ),
+                                        );
+                                        if (result != null && result is int) {
+                                          provider.removeRecordById(tab, result); // ✅ Call a method to remove the record
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('Comment added for $userName')),
+                                          );
+                                        }
+                                      },
+                                      iconSize: 20,
+                                      padding: EdgeInsets.zero,
+                                      constraints: BoxConstraints(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Text(callDate)
+                        ],
+                      ),
+                    ),
+                  );
+                              },
+                            ),
+                ),
               );
             }
           }

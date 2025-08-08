@@ -159,35 +159,45 @@ class _InstallAppScreenState extends State<InstallAppScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return RefreshIndicator(
-            onRefresh: () async => provider.fetchInstallApp(),
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: data.length + (provider.hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == data.length) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
+          return NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent &&
+                    provider.isLoading == false) {
+                  provider.fetchInstallApp(); // 👈 Load more
                 }
-
-                final record = data[index];
-                return ListTile(
-                  title: Text(record.contactPerson ?? 'No Name'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Phone: ${record.contactNo ?? '-'}"),
-                      SizedBox(height: 4,),
-                      Text("Address: ${record.address ?? '-'}"),
-                      SizedBox(height: 4,),
-                      Text("Created At: ${record.createdAt ?? '-'}"),
-                    ],
-                  ),
-                );
+                return true;
               },
-            ),
+              child: RefreshIndicator(
+                onRefresh: () async => provider.fetchInstallApp(),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: data.length + (provider.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == data.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final record = data[index];
+                    return ListTile(
+                      title: Text(record.contactPerson ?? 'No Name'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Phone: ${record.contactNo ?? '-'}"),
+                          SizedBox(height: 4,),
+                          Text("Address: ${record.address ?? '-'}"),
+                          SizedBox(height: 4,),
+                          Text("Created At: ${record.createdAt ?? '-'}"),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
           );
         },
       ),
