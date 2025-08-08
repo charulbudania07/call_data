@@ -45,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   void _callNow(String number) async {
+    print("number$number");
     final uri = Uri(scheme: 'tel', path: number);
     if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
@@ -303,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.call, color: Colors.green),
-                                      onPressed: () => _callNow("+$userPhone"),
+                                      onPressed: () => _callNow(userPhone.replaceFirst(RegExp(r'^91'), '')),
                                       iconSize: 20,
                                       padding: EdgeInsets.zero,
                                       constraints: BoxConstraints(),

@@ -278,7 +278,7 @@ class _FollowUpScreenState extends State<FollowUpScreen> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.call, color: Colors.green),
-                                      onPressed: () => _callNow("+${call.userPhone}"),
+                                      onPressed: () => _callNow(call.userPhone.replaceFirst(RegExp(r'^91'), '')),
                                       iconSize: 20,
                                       padding: EdgeInsets.zero,
                                       constraints: const BoxConstraints(),
