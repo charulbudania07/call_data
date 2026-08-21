@@ -1,8 +1,10 @@
+import 'package:call_management/add_comment_screen.dart';
 import 'package:call_management/custom_drawer.dart';
 import 'package:call_management/provider/install_app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InstallAppScreen extends StatefulWidget {
   final String username;
@@ -15,6 +17,14 @@ class InstallAppScreen extends StatefulWidget {
 
 class _InstallAppScreenState extends State<InstallAppScreen> {
   final ScrollController _scrollController = ScrollController();
+
+  void _callNow(String number) async {
+    print("number$number");
+    final uri = Uri(scheme: 'tel', path: number);
+    if (await canLaunchUrl(uri)) await launchUrl(uri);
+  }
+
+
 
   @override
   void initState() {
@@ -180,7 +190,6 @@ class _InstallAppScreenState extends State<InstallAppScreen> {
                         child: Center(child: CircularProgressIndicator()),
                       );
                     }
-
                     final record = data[index];
                     return ListTile(
                       title: Text(record.contactPerson ?? 'No Name'),
@@ -188,10 +197,49 @@ class _InstallAppScreenState extends State<InstallAppScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Phone: ${record.contactNo ?? '-'}"),
-                          SizedBox(height: 4,),
+                          SizedBox(height: 4),
                           Text("Address: ${record.address ?? '-'}"),
-                          SizedBox(height: 4,),
+                          SizedBox(height: 4),
                           Text("Created At: ${record.createdAt ?? '-'}"),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min, // ✅ Prevent Row from taking full width
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.call, color: Colors.green),
+                            onPressed: () => _callNow(
+                              record.contactNo?.replaceFirst(RegExp(r'^91'), '') ?? '',
+                            ),
+                            iconSize: 20,
+                            padding: EdgeInsets.zero,
+                            constraints: BoxConstraints(),
+                          ),
+                          SizedBox(width: 8),
+                          IconButton(
+                            icon: Icon(Icons.note_add, color: Colors.blue),
+                            onPressed: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AddCommentScreen(
+                                    id: record.id,
+                                    actionType: "Install",
+                                    name: widget.username,
+                                    fromVerification: false,
+                                  ),
+                                ),
+                              );
+                              if (result != null && result is int) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Comment added for ${widget.username}')),
+                                );
+                              }
+                            },
+                            iconSize: 20,
+                            padding: EdgeInsets.zero,
+                            constraints: BoxConstraints(),
+                          ),
                         ],
                       ),
                     );

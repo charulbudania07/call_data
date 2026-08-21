@@ -8,12 +8,15 @@ class AddCommentScreen extends StatefulWidget {
   final String name;
   final String actionType;
   final bool fromVerification;
+  final String screenType; // 👈 new
+
 
   const AddCommentScreen({super.key,
     required this.name,
     required this.id,
     required this.actionType,
     this.fromVerification = false,
+    this.screenType = "",
   });
 
   @override
@@ -143,6 +146,7 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
                   profileType: selectedProfile,
                   comment: comment,
                   isFollowUp: needFollowUp,
+                  screenType: widget.screenType
                 );
 
                 if (success) {
